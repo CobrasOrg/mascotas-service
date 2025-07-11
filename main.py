@@ -4,11 +4,7 @@ from app.core.config import settings
 from app.db.database import connect_to_mongo, close_mongo_connection
 from app.api.v1.api import api_router
 
-app = FastAPI(
-    title=settings.PROJECT_NAME,
-    version=settings.VERSION,
-    description=settings.DESCRIPTION,
-)
+app = FastAPI(title="Mascotas API", version="0.1.0")
 
 # CORS
 app.add_middleware(
@@ -29,7 +25,7 @@ async def shutdown_db_client():
     await close_mongo_connection()
 
 # Include routers
-app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(api_router)
 
 @app.get("/")
 async def root():
