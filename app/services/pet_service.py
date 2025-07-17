@@ -1,7 +1,7 @@
 from app.schemas.pet import PetCreate, PetUpdate, PetResponse
 from app.storage.memory import DB, PHOTO_STORE
 from uuid import uuid4
-from datetime import datetime
+from datetime import datetime, UTC
 from fastapi import UploadFile, HTTPException
 from typing import Optional
 
@@ -17,7 +17,7 @@ def delete_pet(pet_id: str):
 
 def create_pet(data: PetCreate, petPhoto: Optional[UploadFile]) -> PetResponse:
     pet_id = str(uuid4())
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(UTC).isoformat()
     pet_dict = data.dict()
 
     if petPhoto:
@@ -44,7 +44,7 @@ def update_pet(pet_id: str, data: PetUpdate, petPhoto: Optional[UploadFile]) -> 
     pet = DB[pet_id]
     update_data = data.dict(exclude_unset=True)
     pet.update(update_data)
-    pet["updatedAt"] = datetime.utcnow().isoformat()
+    pet["updatedAt"] = datetime.now(UTC).isoformat()
 
     if petPhoto:
         content = petPhoto.file.read()
