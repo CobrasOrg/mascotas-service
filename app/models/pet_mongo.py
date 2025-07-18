@@ -22,10 +22,16 @@ class PetMongoModel:
         if "_id" in doc:
             doc["id"] = str(doc["_id"])
             del doc["_id"]
-        # Convertir campos datetime a string ISO
-        for field in ["registeredAt", "updatedAt", "lastVaccination"]:
+        
+        # Convertir campos datetime a string ISO para registeredAt y updatedAt
+        for field in ["registeredAt", "updatedAt"]:
             if field in doc and isinstance(doc[field], (datetime, date)):
                 doc[field] = doc[field].isoformat()
+        
+        # Convertir lastVaccination de datetime a date (solo la fecha)
+        if "lastVaccination" in doc and isinstance(doc["lastVaccination"], datetime):
+            doc["lastVaccination"] = doc["lastVaccination"].date()
+        
         # Asegurar nombres de campo en camelCase
         # Si los datos vienen en snake_case, convertirlos
         mapping = {
